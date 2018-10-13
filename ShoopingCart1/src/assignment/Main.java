@@ -33,7 +33,6 @@ public class Main {
 			option = menu();
 			switch(option) {
 			case "1":
-				System.out.print("HEE");
 					createNewProduct();
 				break;
 				
