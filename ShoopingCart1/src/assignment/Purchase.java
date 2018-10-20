@@ -13,10 +13,6 @@ public class Purchase {
 		this.discount = discount;
 	}
 	
-//	public Purchase() {
-//		// TODO Auto-generated constructor stub
-//	}
-
 	//New
 	public String getOrderNo() {
 		return orderNo;

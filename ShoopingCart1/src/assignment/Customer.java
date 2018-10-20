@@ -17,15 +17,30 @@ public class Customer {
 	}
 	
 	public void placeOrder(Cart shoppingCart) {
-		
+		this.shoppingCart = shoppingCart;
+	}
+	
+	public String getCustomerID() {
+		return customerID;
+	}
+	
+	public String getCustomerName() {
+		return customerName;
+	}
+	
+	public String getShippingAddress() {
+		return shippingAddress;
+	}
+	
+	public Cart getCart() {
+		return shoppingCart;
 	}
 	
 	public void cancelOrder() {
-		
+		this.shoppingCart = null;
 	}
 	
-	public String checkOut() {
-		
+	public String checkOut() {	
 		return "";
 	}
 	
@@ -33,11 +48,10 @@ public class Customer {
 		return "[ ID : " + customerID + " ]" + "\n[ Name : " + customerName + " ]"
 				+ "\n[ Email : " + email + " ]\n" + "[ Ship to : " + shippingAddress + " ]"
 				+ "\n[ Bill to : " + billingAddress + " ]";
-		
 	}
 	
-	
-	
-	
+	public String print() {
+		return customerID + "\t" + customerName + "\t" + "\t" + shoppingCart.calculateTotal(); 
+	}
 	
 }

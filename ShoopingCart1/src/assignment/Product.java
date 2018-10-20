@@ -6,8 +6,8 @@ public class Product {
 	private String description;
 	private double price;
 	private double qtyInStock;
+	
 	public Product(String id, String name, String description, double qty, double price) {
-		super();
 		this.id = id;
 		this.name = name;
 		this.description = description;
@@ -15,8 +15,16 @@ public class Product {
 		this.price = price;
 	}
 	
+	//method to check qty of products in stock
 	public boolean isValidStock(double qty) {
 		if(qtyInStock > qty) return true;
+		return false;
+	}
+	
+	public boolean isDuplicatedProductID(String id) {
+		if(this.id.equalsIgnoreCase(id)) {
+			return true;
+		}
 		return false;
 	}
 	
@@ -47,4 +55,10 @@ public class Product {
 	public String toString() {
 		return id + "\t" + name + "\t\t" + qtyInStock + "\t" + price + "\t" + description;
 	}
+	
+	public void decreaseStock(double qty) {
+		this.qtyInStock = 	qtyInStock - qty;
+	}
+	
+	
 }

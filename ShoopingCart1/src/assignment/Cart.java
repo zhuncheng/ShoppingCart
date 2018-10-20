@@ -10,7 +10,7 @@ public class Cart {
 	public Cart(double discount) {
 		this.discount = discount;
 	}
-	
+
 	public Cart() {
 		// TODO Auto-generated constructor stub
 	}
@@ -45,7 +45,11 @@ public class Cart {
 		return subTotal;
 	}
 	
+	public int getPurchasedItemAmount() {
+		return purchasedItems.size();
+	}
+	
 	public double calculateTotal() {
-		return discount * calculateSubTotal();
+		return calculateSubTotal() - discount * calculateSubTotal();
 	}
 }
