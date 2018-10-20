@@ -38,7 +38,7 @@ public class Main {
 				
 			case "3":
 				
-//				cart = new Cart();
+				cart = new Cart();
 					System.out.println("\n-----------------------Let's go shopping products you want---------------------------------");
 					again:
 						while(true) {
@@ -317,6 +317,7 @@ public class Main {
 			System.out.println("Invalid Customer ID");
 		}
 	}
+	
 	
 	
 }
