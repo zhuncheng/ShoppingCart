@@ -16,6 +16,10 @@ public class Customer {
 		this.billingAddress = billingAddress;
 	}
 	
+	public Customer() {
+		// TODO Auto-generated constructor stub
+	}
+
 	public void placeOrder(Cart shoppingCart) {
 		this.shoppingCart = shoppingCart;
 	}

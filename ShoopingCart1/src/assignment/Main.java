@@ -13,7 +13,7 @@ public class Main {
 	
 	public static void main(String[] args) {	
 		String option;
-		String choice;
+		
 		List<Product> products = new ArrayList<Product>();
 		Cart cart = new Cart();;
 		/*Initialize 3 products and add to list of Products */		 
@@ -21,8 +21,6 @@ public class Main {
 		products.add(new Product("002","Desktop","Product of Cambodia", 100, 1100));
 		products.add(new Product("003","Mouse","Product of Cambodia", 100, 10));
 		
-		Purchase purchase;
-		String proCode;
 		
 		do {
 			option = menu();
@@ -32,68 +30,17 @@ public class Main {
 				break;
 				
 			case "2":
-		
 					showProductList(products);
 				break;
 				
 			case "3":
-				
-				cart = new Cart();
-					System.out.println("\n-----------------------Let's go shopping products you want---------------------------------");
-					again:
-						while(true) {
-							boolean i = false;
-							System.out.print("Enter product code you want to buy : "); proCode = in.nextLine();
-							//
-							for(Product product : products) {
-								if(product.getID().equalsIgnoreCase(proCode)) {
-									System.out.print("Enter product qty you want to buy : "); double qty = in.nextDouble();
-									for(Product product1 : products) {
-										if(product1.getID().equalsIgnoreCase(proCode)) {
-											i = true;
-											if(product1.isValidStock(qty) == false) {
-												System.out.print("Not enough stock!!! Product with code " + product1.getID() + " has only " + product1.getQtyInStock() + " in stock");
-												in.nextLine();
-											}
-											else 
-												{
-													product1.setQtyInStock(product1.getQtyInStock() - qty); //reduce product in stock	
-													System.out.print("Enter discount for this product if you have: "); double discount = in.nextDouble();
-													purchase = new Purchase(proCode, product1, qty, discount);
-										
-													cart.addItem(purchase);	
-													
-													System.out.println("------------------------------------------------------------");
-													System.out.println("Do you want to shop more product?(Y/N)");
-													in.nextLine();
-													choice = in.nextLine(); 
-													if(choice.equalsIgnoreCase("y")) continue again;
-													else break again;
-													
-												}
-										}
-									}
-								}
-							}
-							
-							if(i == false) {
-								System.out.println("Product ID not found");
-							}	
-							
-							System.out.println("------------------------------------------------------------");
-							System.out.println("Do you want to shop other product?(Y/N)");
-							choice = in.nextLine(); 
-						
-							System.out.println(choice);
-							if(choice.equalsIgnoreCase("y")) continue again;
-							else break again;
-						}
+					shoppingProduct(products, cart);
 				break;
 			case "4":
 				String key;
 				if(!cart.getPurchasedItems().isEmpty()) {
-					showMyShoppingCart(cart);
 					do {
+						showMyShoppingCart(cart);
 						System.out.println("	1. Remove item");
 						System.out.println("	2. Add more item(s)");
 						System.out.println("	3. Back to Main Menu");
@@ -104,9 +51,12 @@ public class Main {
 								for(Purchase pur : cart.getPurchasedItems()) {
 									if(pur.getProductName().equalsIgnoreCase(x) || pur.getOrderNo().equalsIgnoreCase(x)) {
 											//cart.removeItem(pur);		
-										if(cart.getPurchasedItemAmount() > 1)
+										if(cart.getPurchasedItemAmount() > 1) {
+											pur.getProduct().setQtyInStock(pur.getProduct().getQtyInStock() + pur.getQty());
 											cart.removeItem(pur);
+										}
 										else
+											pur.getProduct().setQtyInStock(pur.getProduct().getQtyInStock() + pur.getQty());
 											cart = new Cart();
 										System.out.println("Product was successfully removed!!");
 									}
@@ -118,7 +68,8 @@ public class Main {
 							
 							break;
 						case "2":
-								
+							System.out.println("---------------------Shopping more product(s)---------------------");
+								shoppingProduct(products, cart);
 							break;
 						}
 					}while(!key.equalsIgnoreCase("3"));
@@ -167,16 +118,37 @@ public class Main {
 						}
 						break;
 					case "2":
-						
-							customer.cancelOrder();
+						if(!cart.getPurchasedItems().isEmpty()) {
+							//customer.cancelOrder();
+							customer = new Customer();
+							System.out.println("Cart was completely removed!!!");
+						}
+						else {
+							System.out.println("There is no product in cart...");
+						}
 						
 						in.nextLine();
 
 						break;
 					case "3":
-							showShoppingHistory(customers);
-							System.out.println("Enter Customer ID : "); String cusID = in.nextLine();
-							searchCustomer(cusID);
+						String st;
+						if(!customers.isEmpty()) {
+							do {
+								showShoppingHistory(customers);
+								System.out.println("1. Search Customer by customer ID");
+								System.out.println("2. Go back");
+								st = in.nextLine();
+								switch(st) {
+								case "1":
+									System.out.println("Enter Customer ID : "); String cusID = in.nextLine();
+									searchCustomer(cusID);	
+									break;
+								}
+							}while(!st.equalsIgnoreCase("2"));
+						}
+						else {
+							System.out.println("No any customers to view!!!");
+						}
 						break;
 					}
 				}while(!ch.equals("4"));				
@@ -273,9 +245,9 @@ public class Main {
 		
 		drawingTable.print();
 		
-		System.out.println("1. Search Customer by customer ID");
-		System.out.println("2. Go back");
-		in.nextLine();
+//		System.out.println("1. Search Customer by customer ID");
+//		System.out.println("2. Go back");
+//		in.nextLine();
 		
 		
 	}
@@ -306,19 +278,72 @@ public class Main {
 	}
 	
 	public static void searchCustomer(String customerID) {
-		int i = 0;
+		boolean i = false;
 		for(Customer customer : customers) {
 			if(customer.getCustomerID().equalsIgnoreCase(customerID)) {
 				showCustomer(customer);
-				i++;
+				i = true;
 			}
 		}
-		if(i == 0) {
+		if(i == false) {
 			System.out.println("Invalid Customer ID");
 		}
 	}
 	
-	
+	public static void shoppingProduct(List<Product> products, Cart cart) {
+		String choice;
+		//cart = new Cart();
+		System.out.println("\n-----------------------Let's go shopping products you want---------------------------------");
+		again:
+			while(true) {
+				boolean i = false;
+				System.out.print("Enter product code you want to buy : "); String proCode = in.nextLine();
+				//
+				for(Product product : products) {
+					if(product.getID().equalsIgnoreCase(proCode)) {
+						System.out.print("Enter product qty you want to buy : "); double qty = in.nextDouble();
+						for(Product product1 : products) {
+							if(product1.getID().equalsIgnoreCase(proCode)) {
+								i = true;
+								if(product1.isValidStock(qty) == false) {
+									System.out.print("Not enough stock!!! Product with code " + product1.getID() + " has only " + product1.getQtyInStock() + " in stock");
+									in.nextLine();
+								}
+								else 
+									{
+										product1.setQtyInStock(product1.getQtyInStock() - qty); //reduce product in stock	
+										System.out.print("Enter discount for this product if you have: "); double discount = in.nextDouble();
+										Purchase purchase = new Purchase(proCode, product1, qty, discount);
+							
+										cart.addItem(purchase);	
+										
+										System.out.println("------------------------------------------------------------");
+										System.out.println("Do you want to shop more product?(Y/N)");
+										in.nextLine();
+										choice = in.nextLine(); 
+										if(choice.equalsIgnoreCase("y")) continue again;
+										else break again;
+										
+									}
+							}
+						}
+					}
+				}
+				
+				if(i == false) {
+					System.out.println("Product ID not found");
+				}	
+				
+				System.out.println("------------------------------------------------------------");
+				System.out.println("Do you want to shop other product?(Y/N)");
+				choice = in.nextLine(); 
+			
+				System.out.println(choice);
+				if(choice.equalsIgnoreCase("y")) continue again;
+				else break again;
+			}
+		
+	}
 	
 }
 

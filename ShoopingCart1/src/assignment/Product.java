@@ -15,12 +15,13 @@ public class Product {
 		this.price = price;
 	}
 	
-	//method to check qty of products in stock
+	//method to check validable qty of products in stock
 	public boolean isValidStock(double qty) {
-		if(qtyInStock > qty) return true;
+		if(qtyInStock >= qty) return true;
 		return false;
 	}
 	
+	//Method to check the duplicated product ID
 	public boolean isDuplicatedProductID(String id) {
 		if(this.id.equalsIgnoreCase(id)) {
 			return true;
@@ -56,8 +57,14 @@ public class Product {
 		return id + "\t" + name + "\t\t" + qtyInStock + "\t" + price + "\t" + description;
 	}
 	
+	//Method to decrease qty of product in stock
 	public void decreaseStock(double qty) {
 		this.qtyInStock = 	qtyInStock - qty;
+	}
+	
+	//Methos to increase product in stock
+	public void increaseStock(double qty) {
+		this.qtyInStock = qtyInStock + 	qty;
 	}
 	
 	

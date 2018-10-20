@@ -13,6 +13,9 @@ public class Purchase {
 		this.discount = discount;
 	}
 	
+	public Product getProduct() {
+		return this.product;
+	}
 	//New
 	public String getOrderNo() {
 		return orderNo;
@@ -42,7 +45,4 @@ public class Purchase {
 		return orderNo + "\t" + product.getName() + "\t\t" + qty + "\t" + product.getPrice() + "\t\t" + discount + "\t" + getPrice();
 	}
 	
-//	public void addProduct(String id, String name, String description, double price, double  qty) {
-//		
-//	}
 }
